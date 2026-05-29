@@ -1,32 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Qur'an Repetition Tracker</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Qur'an Repetition Tracker</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
 <body>
-<h3 class="hdy">HIDAYATUL QUR'AN LITAHFIZ JALINGO</h3>
-<div class="container">
 
-  <h1>Qur'an Repetition Tracker</h1>
+<h3 class="hdy">
+HIDAYATUL QUR'AN LITAHFIZ JALINGO
+</h3>
 
-  <div class="input-section">
-    <input type="text" id="studentName" placeholder="Student name">
+<div class="menu-bar">
 
-    <input type="number" id="targetCount" placeholder="Target">
+<button id="menuBtn">
+☰
+</button>
+<input
+type="text"
+id="searchStudent"
+placeholder="Search student...">
 
-    <button onclick="addStudent()">Add Student</button>
-  </div>
+<div id="menuPanel" class="menu-panel">
 
-  <div id="studentList"></div>
+<label>
+
+<input
+type="checkbox"
+id="soundToggle"
+checked>
+
+Enable Sound
+
+</label>
+
+<label>
+
+<input
+type="checkbox"
+id="adsToggle">
+
+Allow Ads
+
+</label>
+
+<button id="exportCSV">
+Export CSV
+</button>
+
+<button id="exportTXT">
+Export TXT
+</button>
+
+<button id="clearAllBtn">
+Refresh All Records
+</button>
 
 </div>
 
-<script src="script.js"></script>
+</div>
 
-<audio id="completeSound" src="complete.mp3"></audio>
+<div class="container">
+
+<h1 class="quran">
+Qur'an Repetition Tracker
+</h1>
+
+
+
+<div class="input-section">
+
+<input
+type="text"
+id="studentName"
+placeholder="Student name">
+
+<input
+type="number"
+id="targetCount"
+placeholder="Target repetition">
+
+<button onclick="addStudent()">
+
+Add Student
+
+</button>
+
+</div>
+
+<div id="studentList">
+
+</div>
+
+</div>
+
+<div id="rewardAd" class="reward-ad">
+
+<div class="reward-box">
+
+<h2>
+Sponsored
+</h2>
+
+<p>
+Please wait...
+</p>
+
+<h1 id="adTimer">
+30
+</h1>
+
+<button
+id="skipAd"
+disabled>
+
+Skip (10)
+
+</button>
+
+</div>
+
+</div>
+
+<audio
+id="completeSound"
+src="complete.mp3">
+
+</audio>
+
+<script src="https://cdn.jsdelivr.net/npm/@googleads/admob-plus/dist/admob-plus.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
