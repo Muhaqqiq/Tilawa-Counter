@@ -1,114 +1,546 @@
-const studentList = document.getElementById("studentList");
+const studentList =
+document.getElementById(
+"studentList"
+);
 
-function addStudent() {
+const completeSound =
+document.getElementById(
+"completeSound"
+);
 
-const completeSound = document.getElementById("completeSound");
+const searchInput =
+document.getElementById(
+"searchStudent"
+);
 
-  const nameInput = document.getElementById("studentName");
-  const targetInput = document.getElementById("targetCount");
+const menuBtn =
+document.getElementById(
+"menuBtn"
+);
 
-  const name = nameInput.value.trim();
-  const target = parseInt(targetInput.value);
+const menuPanel =
+document.getElementById(
+"menuPanel"
+);
 
-  if(name === ""){
-    alert("Enter student name");
-    return;
-  }
+const soundToggle =
+document.getElementById(
+"soundToggle"
+);
 
-  if(!target || target <= 0){
-    alert("Enter valid target");
-    return;
-  }
+const clearAllBtn =
+document.getElementById(
+"clearAllBtn"
+);
 
-  let count = 0;
+const exportCSVBtn =
+document.getElementById(
+"exportCSV"
+);
 
-  const card = document.createElement("div");
-  card.className = "student-card";
+const exportTXTBtn =
+document.getElementById(
+"exportTXT"
+);
 
-  card.innerHTML = `
-    <h2>${name}</h2>
+let students =
+JSON.parse(
+localStorage.getItem(
+"students"
+)
+) || [];
 
-    <div class="count">0 / ${target}</div>
+let addCounter =
+parseInt(
+localStorage.getItem(
+"addCounter"
+)
+) || 0;
 
-    <div class="buttons">
-      <button class="add-btn">+1</button>
-      <button class="minus-btn">-1</button>
-    </div>
+let soundEnabled =
+JSON.parse(
+localStorage.getItem(
+"soundEnabled"
+)
+);
 
-    <div class="buttons">
-      <button class="reset-btn">Reset</button>
-      <button class="delete-btn">Delete</button>
-    </div>
+if(soundEnabled===null){
 
-    <div class="status"></div>
-  `;
-
-  const countDisplay = card.querySelector(".count");
-  const addBtn = card.querySelector(".add-btn");
-  const minusBtn = card.querySelector(".minus-btn");
-  const resetBtn = card.querySelector(".reset-btn");
-  const deleteBtn = card.querySelector(".delete-btn");
-  const status = card.querySelector(".status");
-
-  addBtn.addEventListener("click", function(){
-
-    if(count < target){
-
-      count++;
-
-      countDisplay.textContent = count + " / " + target;
-
-      if(count === target){
-        status.innerHTML =
-          "<div class='finished'>Completed ✅</div>";
-          completeSound.play();
-      }
-
-    }
-
-  });
-
-  minusBtn.addEventListener("click", function(){
-
-    if(count > 0){
-
-      count--;
-
-      countDisplay.textContent = count + " / " + target;
-
-      if(count < target){
-        status.innerHTML = "";
-      }
-
-    }
-
-  });
-
-  resetBtn.addEventListener("click", function(){
-
-    count = 0;
-
-    countDisplay.textContent = "0 / " + target;
-
-    status.innerHTML = "";
-
-  });
-
-  deleteBtn.addEventListener("click", function(){
-
-    const confirmDelete = confirm(
-      "Are you sure you want to delete " + name + "?"
-    );
-
-    if(confirmDelete){
-      card.remove();
-    }
-
-  });
-
-  studentList.appendChild(card);
-
-  nameInput.value = "";
-  targetInput.value = "";
+soundEnabled=true;
 
 }
+
+soundToggle.checked =
+soundEnabled;
+
+soundToggle.onchange=()=>{
+
+soundEnabled=
+soundToggle.checked;
+
+localStorage.setItem(
+"soundEnabled",
+JSON.stringify(
+soundEnabled
+)
+);
+
+};
+
+menuBtn.onclick=()=>{
+
+menuPanel.classList.toggle(
+"show"
+);
+
+};
+
+function saveStudents(){
+
+localStorage.setItem(
+"students",
+JSON.stringify(
+students
+)
+);
+
+}
+
+async function showRewardAd() {
+
+  try {
+
+    const rewardAd =
+    new admob.RewardedAd({
+
+      adUnitId:
+      "ca-app-pub-2537959556073486/2144209965"
+
+    });
+
+    await rewardAd.load();
+
+    await rewardAd.show();
+
+    console.log(
+    "Reward ad completed"
+    );
+
+  } catch (err) {
+
+    console.log(
+    "Ad failed:",
+    err
+    );
+
+  }
+
+}
+
+function renderStudents(){
+
+studentList.innerHTML="";
+
+const keyword=
+searchInput.value
+.toLowerCase();
+
+students
+.filter(s=>
+
+s.name
+.toLowerCase()
+.includes(keyword)
+
+)
+
+.forEach(student=>{
+
+const card=
+document.createElement(
+"div"
+);
+
+card.className=
+"student-card";
+
+card.innerHTML=`
+
+<h2>${student.name}</h2>
+
+<div class="count">
+
+${student.count}
+/
+${student.target}
+
+</div>
+
+<div class="buttons">
+
+<button class="add-btn">
+
++1
+
+</button>
+
+<button class="minus-btn">
+
+-1
+
+</button>
+
+</div>
+
+<div class="buttons">
+
+<button class="reset-btn">
+
+Reset
+
+</button>
+
+<button class="delete-btn">
+
+Delete
+
+</button>
+
+</div>
+
+<div class="status">
+
+${student.count>=student.target?
+
+"<div class='finished'>Completed ✅</div>"
+
+:""}
+
+</div>
+
+`;
+
+const countDisplay=
+card.querySelector(
+".count"
+);
+
+const status=
+card.querySelector(
+".status"
+);
+
+card.querySelector(
+".add-btn"
+).onclick=()=>{
+
+if(student.count
+<student.target){
+
+student.count++;
+
+if(
+navigator.vibrate
+){
+
+navigator.vibrate(
+30
+);
+
+}
+
+countDisplay.textContent=
+
+student.count+
+" / "+
+student.target;
+
+if(
+student.count===
+student.target
+){
+
+if(
+soundEnabled
+){
+
+completeSound.play();
+
+}
+
+status.innerHTML=
+
+"<div class='finished'>Completed ✅</div>";
+
+}
+
+saveStudents();
+
+}
+
+};
+
+card.querySelector(
+".minus-btn"
+).onclick=()=>{
+
+if(student.count>0){
+
+student.count--;
+
+status.innerHTML="";
+
+saveStudents();
+
+renderStudents();
+
+}
+
+};
+
+card.querySelector(
+".reset-btn"
+).onclick=()=>{
+
+student.count=0;
+
+saveStudents();
+
+renderStudents();
+
+};
+
+card.querySelector(
+".delete-btn"
+).onclick=()=>{
+
+if(confirm(
+
+"Delete "+
+student.name+
+" ?"
+
+)){
+
+students=
+students.filter(
+s=>s!==student
+);
+
+saveStudents();
+
+renderStudents();
+
+}
+
+};
+
+studentList.appendChild(
+card
+);
+
+});
+
+}
+
+function addStudent(){
+
+const name=
+document
+.getElementById(
+"studentName"
+)
+.value.trim();
+
+const target=
+parseInt(
+
+document
+.getElementById(
+"targetCount"
+)
+.value
+
+);
+
+if(!name){
+
+alert(
+"Enter name"
+);
+
+return;
+
+}
+
+if(!target){
+
+alert(
+"Enter target"
+);
+
+return;
+
+}
+
+students.push({
+
+name:name,
+
+target:target,
+
+count:0
+
+});
+
+addCounter++;
+
+localStorage.setItem(
+
+"addCounter",
+
+addCounter
+
+);
+
+if(addCounter % 3 === 0){
+
+showRewardAd();
+
+}
+
+saveStudents();
+
+renderStudents();
+
+document
+.getElementById(
+"studentName"
+).value="";
+
+document
+.getElementById(
+"targetCount"
+).value="";
+
+}
+
+searchInput.addEventListener(
+
+"input",
+
+renderStudents
+
+);
+
+clearAllBtn.onclick=()=>{
+
+if(confirm(
+
+"Delete all records?"
+
+)){
+
+students=[];
+
+addCounter=0;
+
+localStorage.clear();
+
+renderStudents();
+
+}
+
+};
+
+exportCSVBtn.onclick=()=>{
+
+let csv=
+
+"Name,Progress,Target\n";
+
+students.forEach(s=>{
+
+csv+=
+
+s.name+
+
+","+
+
+s.count+
+
+","+
+
+s.target+
+
+"\n";
+
+});
+
+const blob=
+new Blob(
+[csv]
+);
+
+const a=
+document.createElement(
+"a"
+);
+
+a.href=
+URL.createObjectURL(
+blob
+);
+
+a.download=
+"records.csv";
+
+a.click();
+
+};
+
+exportTXTBtn.onclick=()=>{
+
+let text="";
+
+students.forEach(s=>{
+
+text+=
+
+s.name+
+
+" : "+
+
+s.count+
+
+"/"+
+
+s.target+
+
+"\n";
+
+});
+
+const blob=
+new Blob(
+[text]
+);
+
+const a=
+document.createElement(
+"a"
+);
+
+a.href=
+URL.createObjectURL(
+blob
+);
+
+a.download=
+"records.txt";
+
+a.click();
+
+};
+
+renderStudents();
