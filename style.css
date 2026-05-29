@@ -1,0 +1,105 @@
+body{
+  font-family: Arial;
+  background:#f4f4f4;
+  padding:20px;
+}
+
+.hdy {
+  text-align: center;
+  font-family: sans-serif;
+  color: navy;
+}
+
+button {
+    font-weight:bold;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  display: flex;
+  flex-direction: column;
+}
+
+h1{
+  text-align:center;
+  color:darkgreen;
+}
+
+.input-section{
+  display:flex;
+  flex-direction: column;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.input-section input{
+  padding:12px;
+  flex:1;
+  font-size:16px;
+}
+
+.input-section button{
+  padding:12px 20px;
+  background:darkgreen;
+  color:white;
+  border: 2px solid;
+  border-radius: 10px;
+  cursor:pointer;
+}
+
+#studentList{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:15px;
+}
+
+.student-card{
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+
+.count{
+  font-size:24px;
+  font-weight:bold;
+  margin:15px 0;
+  color:darkgreen;
+}
+
+.buttons{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+
+.buttons button{
+  flex:1;
+  padding:10px;
+  border:none;
+  color:white;
+  cursor:pointer;
+}
+
+.add-btn{
+  background:green;
+}
+
+.minus-btn{
+  background:orange;
+}
+
+.reset-btn{
+  background:red;
+}
+
+.delete-btn{
+  background:purple;
+}
+
+.finished{
+  margin-top:10px;
+  color:green;
+  font-weight:bold;
+}
